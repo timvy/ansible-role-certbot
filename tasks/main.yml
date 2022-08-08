@@ -12,7 +12,7 @@
 
 - name: Creating secrets file
   copy:
-    dest: "/etc/letcencrypt/credentials.ini"
+    dest: "/etc/letsencrypt/credentials.ini"
     content: |
       certbot_dns_cpanel:cpanel_url = {{ cpanel_url }}
       certbot_dns_cpanel:cpanel_username = {{ cpanel_username }}

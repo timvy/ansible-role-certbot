@@ -2,6 +2,7 @@
 # vars file for certbot
 certbot_packages:
   - certbot
+  - python3-pip
 
 certbot_pip_packages:
   - certbot-dns-cpanel
