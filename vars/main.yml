@@ -3,6 +3,10 @@
 certbot_package:
   - certbot
 
+certbot_pip_package:
+  - certbot
+  - certbot-dns-cpanel
+
 _certbot_packages:
   apache:
     default:

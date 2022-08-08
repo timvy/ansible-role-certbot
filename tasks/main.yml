@@ -3,13 +3,21 @@
 
 - name: import assert.yml
   ansible.builtin.import_tasks: assert.yml
-  run_once: yes
+  run_once: true
   delegate_to: localhost
 
 - name: install certbot
-  ansible.builtin.package:
-    name: "{{ certbot_packages }}"
+  ansible.builtin.pip:
+    name: "{{ certbot_pip_packages }}"
     state: present
+
+- name: Creating secrets file
+  copy:
+    dest: "tmp/credentials.ini"
+    content: |
+      certbot_dns_cpanel:cpanel_url = {{ lookup('bitwarden', 'certbot-dns-cpanel', field='uri') }}
+      certbot_dns_cpanel:cpanel_username = {{ lookup('bitwarden', 'certbot-dns-cpanel', field='username') }}
+      certbot_dns_cpanel:cpanel_token = {{ lookup('bitwarden', 'certbot-dns-cpanel', field='password') }}
 
 - name: get and install certificates (Standalone)
   ansible.builtin.command:
@@ -19,6 +27,8 @@
       --domain {{ certbot_domains | join(',') }}
       --agree-tos
       --email {{ certbot_email }}
+      --authenticator certbot-dns-cpanel:cpanel
+      --certbot-dns-cpanel:cpanel-credentials /tmp/credentials.ini
     creates: /etc/letsencrypt/accounts
   when:
     - certbot_ci_mode is not defined
