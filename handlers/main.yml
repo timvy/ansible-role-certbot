@@ -1,10 +1,2 @@
 ---
 # handlers file for certbot
-
-- name: restart certbot_system
-  ansible.builtin.service:
-    name: "{{ certbot_system_to_restart }}"
-    state: restarted
-  when:
-    - not ansible_check_mode
-    - certbot_system != "standalone"

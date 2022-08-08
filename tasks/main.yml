@@ -1,11 +1,6 @@
 ---
 # tasks file for certbot
 
-- name: import assert.yml
-  ansible.builtin.import_tasks: assert.yml
-  run_once: true
-  delegate_to: localhost
-
 - name: install certbot
   ansible.builtin.pip:
     name: "{{ certbot_pip_packages }}"
@@ -13,11 +8,11 @@
 
 - name: Creating secrets file
   copy:
-    dest: "tmp/credentials.ini"
+    dest: "/etc/letcencrypt/credentials.ini"
     content: |
-      certbot_dns_cpanel:cpanel_url = {{ lookup('bitwarden', 'certbot-dns-cpanel', field='uri') }}
-      certbot_dns_cpanel:cpanel_username = {{ lookup('bitwarden', 'certbot-dns-cpanel', field='username') }}
-      certbot_dns_cpanel:cpanel_token = {{ lookup('bitwarden', 'certbot-dns-cpanel', field='password') }}
+      certbot_dns_cpanel:cpanel_url = {{ cpanel_url }}
+      certbot_dns_cpanel:cpanel_username = {{ cpanel_username }}
+      certbot_dns_cpanel:cpanel_token = {{ cpanel_token }}
 
 - name: get and install certificates (Standalone)
   ansible.builtin.command:
@@ -30,23 +25,6 @@
       --authenticator certbot-dns-cpanel:cpanel
       --certbot-dns-cpanel:cpanel-credentials /tmp/credentials.ini
     creates: /etc/letsencrypt/accounts
-  when:
-    - certbot_ci_mode is not defined
-    - certbot_system == "standalone"
-
-- name: get and install certificates (Managed)
-  ansible.builtin.command:
-    cmd: |
-      certbot --noninteractive
-      --{{ certbot_system }}
-      --domain {{ certbot_domains | join(',') }}
-      --agree-tos
-      --email {{ certbot_email }}
-      --no-redirect
-    creates: /etc/letsencrypt/accounts
-  when:
-    - certbot_ci_mode is not defined
-    - certbot_system != "standalone"
 
 - name: set up automatic renewal
   ansible.builtin.cron:
