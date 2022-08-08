@@ -1,9 +1,9 @@
 ---
 # vars file for certbot
-certbot_package:
+certbot_packages:
   - certbot
 
-certbot_pip_package:
+certbot_pip_packages:
   - certbot-dns-cpanel
 
 cpanel_url: "{{ lookup('bitwarden', 'certbot-dns-cpanel', field='uri') }}"
