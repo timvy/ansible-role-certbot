@@ -22,12 +22,11 @@
   ansible.builtin.command:
     cmd: |
       certbot certonly --noninteractive
-      --{{ certbot_system }}
       --domain {{ certbot_domains | join(',') }}
       --agree-tos
       --email {{ certbot_email }}
       --authenticator certbot-dns-cpanel:cpanel
-      --certbot-dns-cpanel:cpanel-credentials /tmp/credentials.ini
+      --certbot-dns-cpanel:cpanel-credentials /etc/letsencrypt/credentials.ini
     creates: /etc/letsencrypt/accounts
 
 - name: set up automatic renewal
