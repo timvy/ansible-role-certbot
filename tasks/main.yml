@@ -1,7 +1,7 @@
 ---
 # tasks file for certbot
 - name: install system packges
-  ansible.builtin.packages:
+  ansible.builtin.package:
     name: "{{ certbot_packages }}"
     state: present
 
