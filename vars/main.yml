@@ -1,9 +1,14 @@
 ---
 # vars file for certbot
-certbot_pip_package:
+certbot_package:
   - certbot
+
+certbot_pip_package:
   - certbot-dns-cpanel
 
-cpanel_url: {{ lookup('bitwarden', 'certbot-dns-cpanel', field='uri') }}
-cpanel_username: {{ lookup('bitwarden', 'certbot-dns-cpanel', field='username') }}
-cpanel_token: {{ lookup('bitwarden', 'certbot-dns-cpanel', field='password') }}
+cpanel_url: "{{ lookup('bitwarden', 'certbot-dns-cpanel', field='uri') }}"
+cpanel_username: "{{ lookup('bitwarden', 'certbot-dns-cpanel', field='username') }}"
+cpanel_token: "{{ lookup('bitwarden', 'certbot-dns-cpanel', field='password') }}"
+
+certbot_domains: "{{ lookup('bitwarden', 'certbot_letsencrypt', field='notes').split('\n') }}"
+certbot_email: "{{ lookup('bitwarden', 'certbot_letsencrypt', field='email', custom_field=true) }}"
